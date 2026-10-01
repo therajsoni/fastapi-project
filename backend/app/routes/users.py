@@ -47,13 +47,11 @@ def update_user(id:str , user:UserUpdate):
     } , {
         "$set" : data
     })
-    print(result)
     return { 
         "message" : "User updated" , 
          "success" : True , 
          "id" : id , 
-         "modified_count" : result.modified_count ,
-         "data" : serialize_doc(result)
+         "modified_count" : result.modified_count 
     }
 
 @router.delete("/{id}")
