@@ -5,7 +5,12 @@ from app.core.database import db
 from bson import ObjectId , json_util
 from fastapi.responses import JSONResponse
 import json  
-
+def serialize_doc(doc):
+    if doc:
+        doc["_id"] = str(doc["_id"])
+    return doc
+def serialize_docs(docs):
+    return [serialize_doc(doc) for doc in docs]    
 
 router = APIRouter(prefix="/users" , tags=["users"])
 
@@ -100,6 +105,6 @@ def get_users():
     response = { 
         "message" : "Users Getted Successfully" , 
          "success" : True ,
-        "data" : json.loads(json.dumps(users))
+        "data" : serialize_docs(list(users))
     }
     return JSONResponse(content=response)
