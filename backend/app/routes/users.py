@@ -6,7 +6,7 @@ router = APIRouter(prefix="/users" , tags=["users"])
 @router.post("/")
 def create_user(user:UserCreate):
     return {
-        "username" : user.name , 
+        "username" : user.username , 
         "password" : user.password , 
         "email" : user.email
     }
