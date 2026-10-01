@@ -89,7 +89,7 @@ def get_user_by_id(id:str):
 @router.get("/")
 def get_users():
     users = Users.find({ })
-    if int(users.count_documents({} , limit=1)) == 0:
+    if int(Users.count_documents({} , limit=1)) == 0:
         return { 
             "message" : "Users not , Empty List" , 
             "success" : True  , 
