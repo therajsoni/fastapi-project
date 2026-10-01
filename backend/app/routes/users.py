@@ -27,7 +27,7 @@ def create_user(user:UserCreate):
     return { 
         "message" : "User created" , 
          "success" : True , 
-         "id" : str(result.inserted_id)
+         "id" : str(result.inserted_id) 
     }
 
 @router.patch("/{id}")
@@ -51,7 +51,8 @@ def update_user(id:str , user:UserUpdate):
         "message" : "User updated" , 
          "success" : True , 
          "id" : id , 
-         "modified_count" : result.modified_count 
+         "modified_count" : result.modified_count ,
+         "data" : serialize_doc(exist)
     }
 
 @router.delete("/{id}")
@@ -72,7 +73,8 @@ def delete_user(id:str):
     return { 
         "message" : "User deleted" , 
          "success" : True , 
-         "id" : str(id) 
+         "id" : str(id) ,
+         "data" : serialize_doc(exist)
     }
 
 @router.get("/{id}")
@@ -89,7 +91,8 @@ def get_user_by_id(id:str):
     return { 
         "message" : "User Getted Successfully" , 
          "success" : True , 
-         "id" : str(id) 
+         "id" : str(id) ,
+         "data" : serialize_doc(exist)
     }
 
 @router.get("/")
