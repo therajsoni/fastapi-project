@@ -100,6 +100,6 @@ def get_users():
     response = { 
         "message" : "Users Getted Successfully" , 
          "success" : True ,
-        "data" : users
+        "data" : json.loads(json.dumps(users))
     }
     return JSONResponse(content=response)
