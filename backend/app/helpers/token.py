@@ -12,10 +12,10 @@ def verify_token(token):
 def bearer_token_verify(request: Request):
     authorization = request.headers.get("Authorization")
     if not authorization:
-        raise HTTPException(
-            status_code=401,
-            detail="Authorization header required"
-        )
+        return {
+            "status" : 401,
+            "detail": "Authorization header required"
+        }
 
     try:
         token = authorization.split(" ")[1]
