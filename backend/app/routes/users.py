@@ -15,10 +15,9 @@ Users = db["users"]
 
 @router.post("/")
 def create_user(user:UserCreate):
-    hashedPassword = hashedPassword(user.password)
     user_data = {
         "username" : user.username , 
-        "password" : hashedPassword , 
+        "password" : hashedPassword(user.password) , 
         "email" : user.email
     }
     result = Users.insert_one(user_data)
@@ -40,6 +39,8 @@ def update_user(id:str , user:UserUpdate,current_user=Depends(bearer_token_verif
          "id" : str(id) , 
         }
     data = user.model_dump(exclude_unset=True)    
+    if user.password:
+        data["password"] = hashedPassword(user.password)
     result = Users.update_one({
         "_id" :  ObjectId(id) 
     } , {
