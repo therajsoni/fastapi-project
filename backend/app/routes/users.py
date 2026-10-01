@@ -17,7 +17,7 @@ Users = db["users"]
 def create_user(user:UserCreate):
     user_data = {
         "username" : user.username , 
-        "password" : hashedPassword(user.password) , 
+        "password" : hashPassword(user.password) , 
         "email" : user.email
     }
     result = Users.insert_one(user_data)
@@ -40,7 +40,7 @@ def update_user(id:str , user:UserUpdate,current_user=Depends(bearer_token_verif
         }
     data = user.model_dump(exclude_unset=True)    
     if user.password:
-        data["password"] = hashedPassword(user.password)
+        data["password"] = hashPassword(user.password)
     result = Users.update_one({
         "_id" :  ObjectId(id) 
     } , {
