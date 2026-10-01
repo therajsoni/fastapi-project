@@ -2,8 +2,10 @@ from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from app.schemas.users import UserCreate , UserUpdate
 from app.core.database import db
-from bson import ObjectId
+from bson import ObjectId , json_util
+from fastapi.responses import JSONResponse
 import json  
+
 
 router = APIRouter(prefix="/users" , tags=["users"])
 
@@ -95,7 +97,10 @@ def get_users():
             "status" : 204
         }
         
-    return { 
+    response = { 
         "message" : "Users Getted Successfully" , 
-         "success" : True 
+         "success" : True ,
+
     }
+
+    return JSONResponse(content=response)
