@@ -97,5 +97,5 @@ def get_users():
     return { 
         "message" : "Users Getted Successfully" , 
          "success" : True , 
-         "data" : users
+         "data" : json.loads(json.dumps(users))
     }
