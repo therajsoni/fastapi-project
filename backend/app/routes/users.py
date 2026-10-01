@@ -5,6 +5,8 @@ from bson import ObjectId
  
 router = APIRouter(prefix="/users" , tags=["users"])
 
+Users = db["users"]
+
 @router.post("/")
 def create_user(user:UserCreate):
     user_data = {
@@ -12,7 +14,7 @@ def create_user(user:UserCreate):
         "password" : user.password , 
         "email" : user.email
     }
-    result = db.insert_one(user_data)
+    result = Users.insert_one(user_data)
     return { 
         "message" : "User created" , 
          "success" : True , 
@@ -22,7 +24,7 @@ def create_user(user:UserCreate):
 
 @router.patch("/{id}")
 def update_user(id:str , user:UserUpdate):
-    exist = db.find_one({
+    exist = Users.find_one({
         "_id" : ObjectId(id)  
     })
     if not exist:
@@ -32,7 +34,7 @@ def update_user(id:str , user:UserUpdate):
          "id" : str(id) , 
         }
     data = user.model_dump(exclude_unset=True)    
-    result = db.update_one({
+    result = Users.update_one({
         "_id" : ObjectId(id)
     } , {
         "$set" : data
@@ -47,7 +49,7 @@ def update_user(id:str , user:UserUpdate):
 
 @router.delete("/{id}")
 def delete_user(id:str):
-    exist = db.find_one({
+    exist = Users.find_one({
         "_id" :  ObjectId(id) 
     })
     if not exist:
@@ -56,7 +58,7 @@ def delete_user(id:str):
          "success" : False , 
          "id" : str(id) , 
     }
-    db.delete_one({
+    Users.delete_one({
         "_id" :  ObjectId(id)
     })
     return { 
@@ -68,7 +70,7 @@ def delete_user(id:str):
 
 @router.get("/{id}")
 def get_user_by_id(id:str):
-    exist = db.find_one({
+    exist = Users.find_one({
         "_id" :  ObjectId(id)
     })
     if not exist:
@@ -86,7 +88,7 @@ def get_user_by_id(id:str):
 
 @router.get("/")
 def get_users():
-    users = db.find({ })
+    users = Users.find({ })
     if len(users) == 0:
         return { 
             "message" : "Users not , Empty List" , 
