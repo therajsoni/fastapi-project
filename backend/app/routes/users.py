@@ -121,7 +121,7 @@ def login_user(data: Login):
          "success" : False , 
          "id" : str(id) , 
       }
-    if not verifyPassword(data.password , exist):
+    if not verifyPassword(data.password , exist.password):
        return {
          "message" : "User Password Wrong" , 
          "success" : False , 
