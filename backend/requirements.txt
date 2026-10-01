@@ -5,3 +5,4 @@ email-validator
 pymongo 
 python-dotenv 
 bcrypt
+PyJWT
