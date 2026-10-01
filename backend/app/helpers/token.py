@@ -1,7 +1,7 @@
 import jwt 
 from app.core.config import SECRET_TOKEN , ALGORITHM
 from fastapi import Request 
-from app.core.serializa import serialize_doc
+from app.helpers.serializa import serialize_doc
 
 def create_token(payload):
     token = jwt.encode(serialize_doc(payload) , SECRET_TOKEN , algorithm=str(ALGORITHM))
