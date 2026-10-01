@@ -1,6 +1,6 @@
 from fastapi import FastAPI 
 from app.routes.health import router as HealthRouter
-
+from app.routes.users import router as UserRouter 
 
 app = FastAPI()
 
@@ -11,3 +11,4 @@ def home():
     }
 
 app.include_router(HealthRouter)
+app.include_router(UserRouter)

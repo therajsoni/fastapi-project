@@ -1,4 +1,11 @@
-Phase 1 
+from pydantic import BaseModel, EmailStr
+
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+Phase 1
 
 | Step | Topic                | Video                          |
 | ---- | -------------------- | ------------------------------ |
@@ -39,5 +46,18 @@ uvicorn app.main:app --reload --port 8000
 ++++++++++++++++++++++++++++++++++++++++++++++
 
 http://127.0.0.1:8000/docs
-    
+```
+
+```
+Pydatic for data validation
+Pydantic: Request & Response Validation
+
+pip install email-validator
+
+from pydantic import BaseModel, EmailStr
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
 ```
