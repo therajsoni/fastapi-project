@@ -1,16 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter , Depends
 from fastapi.encoders import jsonable_encoder
-from app.schemas.users import UserCreate , UserUpdate
+from app.schemas.users import UserCreate , UserUpdate , Login
 from app.core.database import db
+from app.helpers import serialize_doc , serialize_docs
 from bson import ObjectId , json_util
 from fastapi.responses import JSONResponse
+from app.helpers.bcrypt import hashPassword , verifyPassword
+from app.helpers.token import create_token , bearer_token_verify
 import json  
-def serialize_doc(doc):
-    if doc:
-        doc["_id"] = str(doc["_id"])
-    return doc
-def serialize_docs(docs):
-    return [serialize_doc(doc) for doc in docs]    
 
 router = APIRouter(prefix="/users" , tags=["users"])
 
@@ -18,9 +15,10 @@ Users = db["users"]
 
 @router.post("/")
 def create_user(user:UserCreate):
+    hashedPassword = hashedPassword(user.password)
     user_data = {
         "username" : user.username , 
-        "password" : user.password , 
+        "password" : hashedPassword , 
         "email" : user.email
     }
     result = Users.insert_one(user_data)
@@ -31,7 +29,7 @@ def create_user(user:UserCreate):
     }
 
 @router.patch("/{id}")
-def update_user(id:str , user:UserUpdate):
+def update_user(id:str , user:UserUpdate,current_user=Depends(bearer_token_verify)):
     exist = Users.find_one({
         "_id" : ObjectId(id)  
     })
@@ -55,7 +53,7 @@ def update_user(id:str , user:UserUpdate):
     }
 
 @router.delete("/{id}")
-def delete_user(id:str):
+def delete_user(id:str,current_user=Depends(bearer_token_verify)):
     exist = Users.find_one({
         "_id" :  ObjectId(id) 
     })
@@ -77,7 +75,7 @@ def delete_user(id:str):
     }
 
 @router.get("/{id}")
-def get_user_by_id(id:str):
+def get_user_by_id(id:str,current_user=Depends(bearer_token_verify)):
     exist = Users.find_one({
         "_id" :   ObjectId(id) 
     })
@@ -95,7 +93,7 @@ def get_user_by_id(id:str):
     }
 
 @router.get("/")
-def get_users():
+def get_users(current_user=Depends(bearer_token_verify)):
     users = Users.find({ })
     if int(Users.count_documents({} , limit=1)) == 0:
         return { 
@@ -110,3 +108,29 @@ def get_users():
         "data" : serialize_docs(list(users))
     }
     return JSONResponse(content=response)
+
+@router.post("/login")
+def login_user(data: Login):
+    exist = Users.find_one({
+            "email" : data.email
+    })
+    if not exist:
+      return {
+         "message" : "User Not Found" , 
+         "success" : False , 
+         "id" : str(id) , 
+      }
+    if not verifyPassword(data.password , exist):
+       return {
+         "message" : "User Password Wrong" , 
+         "success" : False , 
+         "id" : str(id) , 
+    }
+    return { 
+        "message" : "User Login successfully" , 
+        "status" : 200,
+        "success" : True ,
+        "token" : create_token(exist)
+    }
+
+
