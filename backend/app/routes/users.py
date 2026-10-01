@@ -1,9 +1,10 @@
 from fastapi import APIRouter
+from fastapi.encoders import jsonable_encoder
 from app.schemas.users import UserCreate , UserUpdate
 from app.core.database import db
 from bson import ObjectId
 import json  
- 
+
 router = APIRouter(prefix="/users" , tags=["users"])
 
 Users = db["users"]
@@ -20,12 +21,13 @@ def create_user(user:UserCreate):
         "message" : "User created" , 
          "success" : True , 
          "id" : str(result.inserted_id) , 
+         "data" : jsonable_encoder(result)
     }
 
 @router.patch("/{id}")
 def update_user(id:str , user:UserUpdate):
     exist = Users.find_one({
-        "_id" : id  
+        "_id" : ObjectId(id)  
     })
     if not exist:
         return {
@@ -35,7 +37,7 @@ def update_user(id:str , user:UserUpdate):
         }
     data = user.model_dump(exclude_unset=True)    
     result = Users.update_one({
-        "_id" : id
+        "_id" :  ObjectId(id) 
     } , {
         "$set" : data
     })
@@ -43,13 +45,14 @@ def update_user(id:str , user:UserUpdate):
         "message" : "User updated" , 
          "success" : True , 
          "id" : str(result.inserted_id) , 
-         "result" : result.modified_count
+         "result" : result.modified_count , 
+         "data" : jsonable_encoder(result)
     }
 
 @router.delete("/{id}")
 def delete_user(id:str):
     exist = Users.find_one({
-        "_id" :  id 
+        "_id" :  ObjectId(id) 
     })
     if not exist:
         return {
@@ -58,7 +61,7 @@ def delete_user(id:str):
          "id" : str(id) , 
     }
     Users.delete_one({
-        "_id" :  (id)
+        "_id" :   ObjectId(id) 
     })
     return { 
         "message" : "User deleted" , 
@@ -70,7 +73,7 @@ def delete_user(id:str):
 @router.get("/{id}")
 def get_user_by_id(id:str):
     exist = Users.find_one({
-        "_id" :  (id)
+        "_id" :   ObjectId(id) 
     })
     if not exist:
         return {
@@ -97,5 +100,5 @@ def get_users():
     return { 
         "message" : "Users Getted Successfully" , 
          "success" : True , 
-         "data" : json.loads(json.dumps(users))
+         "data" : jsonable_encoder(users)
     }
