@@ -2,7 +2,7 @@ from fastapi import APIRouter , Depends
 from fastapi.encoders import jsonable_encoder
 from app.schemas.users import UserCreate , UserUpdate , Login
 from app.core.database import db
-from app.helpers import serialize_doc , serialize_docs
+from app.helpers.serializa import serialize_doc , serialize_docs
 from bson import ObjectId , json_util
 from fastapi.responses import JSONResponse
 from app.helpers.bcrypt import hashPassword , verifyPassword
