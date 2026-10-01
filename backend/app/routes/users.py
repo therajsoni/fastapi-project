@@ -25,7 +25,7 @@ def create_user(user:UserCreate):
 @router.patch("/{id}")
 def update_user(id:str , user:UserUpdate):
     exist = Users.find_one({
-        "_id" : ObjectId(id)  
+        "_id" : id  
     })
     if not exist:
         return {
@@ -35,7 +35,7 @@ def update_user(id:str , user:UserUpdate):
         }
     data = user.model_dump(exclude_unset=True)    
     result = Users.update_one({
-        "_id" : ObjectId(id)
+        "_id" : id
     } , {
         "$set" : data
     })
@@ -49,7 +49,7 @@ def update_user(id:str , user:UserUpdate):
 @router.delete("/{id}")
 def delete_user(id:str):
     exist = Users.find_one({
-        "_id" :  ObjectId(id) 
+        "_id" :  id 
     })
     if not exist:
         return {
@@ -58,7 +58,7 @@ def delete_user(id:str):
          "id" : str(id) , 
     }
     Users.delete_one({
-        "_id" :  ObjectId(id)
+        "_id" :  (id)
     })
     return { 
         "message" : "User deleted" , 
@@ -70,7 +70,7 @@ def delete_user(id:str):
 @router.get("/{id}")
 def get_user_by_id(id:str):
     exist = Users.find_one({
-        "_id" :  ObjectId(id)
+        "_id" :  (id)
     })
     if not exist:
         return {
