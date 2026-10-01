@@ -8,6 +8,6 @@ def hashPassword(password):
     return hashed
 
 def verifyPassword(password , hashPassword):
-    return bcrypt.checkpw(password , hashPassword)
+    return bcrypt.checkpw(password.encode() , hashPassword.encode())
     
           
