@@ -122,7 +122,7 @@ def login_user(data: Login):
          "id" : str(id) , 
       }
     print(exist, "Password")  
-    if not verifyPassword(data.password , exist.password):
+    if not verifyPassword(data.password , exist["password"]):
        return {
          "message" : "User Password Wrong" , 
          "success" : False , 
