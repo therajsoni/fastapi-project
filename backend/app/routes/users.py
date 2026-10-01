@@ -20,8 +20,7 @@ def create_user(user:UserCreate):
     return { 
         "message" : "User created" , 
          "success" : True , 
-         "id" : str(result.inserted_id) , 
-         "data" : jsonable_encoder(result)
+         "id" : str(result.inserted_id)
     }
 
 @router.patch("/{id}")
@@ -44,9 +43,8 @@ def update_user(id:str , user:UserUpdate):
     return { 
         "message" : "User updated" , 
          "success" : True , 
-         "id" : str(result.inserted_id) , 
-         "result" : result.modified_count , 
-         "data" : jsonable_encoder(result)
+         "id" : id , 
+         "modified_count" : result.modified_count 
     }
 
 @router.delete("/{id}")
@@ -63,11 +61,11 @@ def delete_user(id:str):
     Users.delete_one({
         "_id" :   ObjectId(id) 
     })
+    exist["_id"] = str(exist["_id"])
     return { 
         "message" : "User deleted" , 
          "success" : True , 
-         "id" : str(id) , 
-         "data" : exist
+         "id" : str(id) 
     }
 
 @router.get("/{id}")
@@ -84,8 +82,7 @@ def get_user_by_id(id:str):
     return { 
         "message" : "User Getted Successfully" , 
          "success" : True , 
-         "id" : str(id) , 
-         "data" : exist
+         "id" : str(id) 
     }
 
 @router.get("/")
@@ -97,8 +94,8 @@ def get_users():
             "success" : True  , 
             "status" : 204
         }
+        
     return { 
         "message" : "Users Getted Successfully" , 
-         "success" : True , 
-         "data" : jsonable_encoder(users)
+         "success" : True 
     }
