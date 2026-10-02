@@ -1,16 +1,23 @@
-from sqlalchemy import create_engine 
-from sqlalchemy.orm import sessionmaker , declartive_base 
-from app.core.config import POSGRESQL_URL
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-engine = create_engine(POSGRESQL_URL)
+from app.core.config import POSTGRES_URL
+
+engine = create_engine(POSTGRES_URL)
+
 SessionLocal = sessionmaker(
-    autoFlush = False , autoCommit = False , bind = engine
+    autocommit=False,
+    autoflush=False,
+    bind=engine
 )
-Base = declartive_base()
+
+Base = declarative_base()
+
+
 def get_db():
     db = SessionLocal()
+
     try:
-        yield db 
+        yield db
     finally:
         db.close()
-            
