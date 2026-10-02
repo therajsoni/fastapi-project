@@ -6,3 +6,5 @@ pymongo
 python-dotenv 
 bcrypt
 PyJWT
+sqlalchemy 
+psycopg2-binary
